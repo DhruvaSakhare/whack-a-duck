@@ -151,12 +151,12 @@ h1 {
 #game {
     display: grid;
     grid-template-columns: repeat(3, 80px);
-    gap: 10px;
+    gap: 15px;
 }
 
 .hole {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     background-image: url('hole.png');
     background-size: cover;
     position: relative;
