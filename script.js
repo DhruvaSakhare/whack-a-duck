@@ -19,6 +19,14 @@ const db = initializeFirestore(app, {
     experimentalForceLongPolling: true
 });
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require("key.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 let score = 0;
 let lastHole;
 let timeUp = false;
