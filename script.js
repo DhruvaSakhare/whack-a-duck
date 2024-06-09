@@ -1,6 +1,6 @@
 import { initializeFirestore } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
+import { require } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
 import { collection, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
 import { query, orderBy, limit, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
 
@@ -14,6 +14,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+const { initializeApp } = require('firebase-admin/app');
 const app = initializeApp(firebaseConfig);
 const db = initializeFirestore(app, {
     experimentalForceLongPolling: true
