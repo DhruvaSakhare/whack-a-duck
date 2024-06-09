@@ -1,9 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, collection, doc, setDoc, getDocs, orderBy, query, onSnapshot, limit } from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC0MQCkJCTClVIFCS6ZNjlVSHnpkhr_Ixc",
   authDomain: "beersmart-f1444.firebaseapp.com",
@@ -15,12 +12,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
+const db = getFirestore(app);
 
 let score = 0;
 let lastHole;
 let timeUp = false;
-let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+let leaderboard = [];
 let minTime = 200;
 let maxTime = 1000;
 
@@ -97,21 +94,36 @@ function showImpact(e) {
     setTimeout(() => impact.remove(), 300);
 }
 
-function saveScore() {
+async function saveScore() {
     const name = prompt('Enter your name:');
-    leaderboard.push({ name, score });
-    leaderboard.sort((a, b) => b.score - a.score);
-    leaderboard = leaderboard.slice(0, 10); // Limit to top 10
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    displayLeaderboard();
+    if (name) {
+        try {
+            await setDoc(doc(collection(db, 'leaderboard'), name), {
+                name,
+                score,
+                timestamp: new Date()
+            }, { merge: true });
+
+            fetchLeaderboard();
+        } catch (error) {
+            console.error('Error saving score to Firestore:', error);
+        }
+    }
 }
 
-function displayLeaderboard() {
-    const leaderboardList = document.getElementById('leaderboardList');
-    leaderboardList.innerHTML = leaderboard.map(entry => `<li>${entry.name}: ${entry.score}</li>`).join('');
+async function fetchLeaderboard() {
+    const q = query(collection(db, 'leaderboard'), orderBy('score', 'desc'), orderBy('timestamp', 'asc'), limit(10));
+    try {
+        const querySnapshot = await getDocs(q);
+        leaderboard = querySnapshot.docs.map(doc => doc.data());
+        const leaderboardList = document.getElementById('leaderboardList');
+        leaderboardList.innerHTML = leaderboard.map(entry => `<li>${entry.name}: ${entry.score}</li>`).join('');
+    } catch (error) {
+        console.error('Error fetching leaderboard from Firestore:', error);
+    }
 }
 
 document.querySelectorAll('.duck').forEach(duck => duck.addEventListener('click', bonk));
 document.getElementById('startButton').addEventListener('click', startGame);
 
-displayLeaderboard();
+fetchLeaderboard();
