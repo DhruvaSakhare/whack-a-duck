@@ -1,3 +1,22 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyC0MQCkJCTClVIFCS6ZNjlVSHnpkhr_Ixc",
+  authDomain: "beersmart-f1444.firebaseapp.com",
+  projectId: "beersmart-f1444",
+  storageBucket: "beersmart-f1444.appspot.com",
+  messagingSenderId: "10064078616",
+  appId: "1:10064078616:web:dbb54ed7d86937f024a06d"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
 let score = 0;
 let lastHole;
 let timeUp = false;
