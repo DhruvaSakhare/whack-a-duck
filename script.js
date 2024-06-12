@@ -1,37 +1,7 @@
-import { initializeFirestore } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-import { require } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
-import { collection, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
-import { query, orderBy, limit, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js"
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC0MQCkJCTClVIFCS6ZNjlVSHnpkhr_Ixc",
-  authDomain: "beersmart-f1444.firebaseapp.com",
-  projectId: "beersmart-f1444",
-  storageBucket: "beersmart-f1444.appspot.com",
-  messagingSenderId: "10064078616",
-  appId: "1:10064078616:web:dbb54ed7d86937f024a06d"
-};
-
-// Initialize Firebase
-const { initializeApp } = require('firebase-admin/app');
-const app = initializeApp(firebaseConfig);
-const db = initializeFirestore(app, {
-    experimentalForceLongPolling: true
-});
-
-var admin = require("firebase-admin");
-
-var serviceAccount = require("key.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
 let score = 0;
 let lastHole;
 let timeUp = false;
-let leaderboard = [];
+let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 let minTime = 200;
 let maxTime = 1000;
 
@@ -108,36 +78,21 @@ function showImpact(e) {
     setTimeout(() => impact.remove(), 300);
 }
 
-async function saveScore() {
+function saveScore() {
     const name = prompt('Enter your name:');
-    if (name) {
-        try {
-            await setDoc(doc(collection(db, 'leaderboard'), name), {
-                name,
-                score,
-                timestamp: new Date()
-            }, { merge: true });
-
-            fetchLeaderboard();
-        } catch (error) {
-            console.error('Error saving score to Firestore:', error);
-        }
-    }
+    leaderboard.push({ name, score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard = leaderboard.slice(0, 10); // Limit to top 10
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    displayLeaderboard();
 }
 
-async function fetchLeaderboard() {
-    const q = query(collection(db, 'leaderboard'), orderBy('score', 'desc'), orderBy('timestamp', 'asc'), limit(10));
-    try {
-        const querySnapshot = await getDocs(q);
-        leaderboard = querySnapshot.docs.map(doc => doc.data());
-        const leaderboardList = document.getElementById('leaderboardList');
-        leaderboardList.innerHTML = leaderboard.map(entry => `<li>${entry.name}: ${entry.score}</li>`).join('');
-    } catch (error) {
-        console.error('Error fetching leaderboard from Firestore:', error);
-    }
+function displayLeaderboard() {
+    const leaderboardList = document.getElementById('leaderboardList');
+    leaderboardList.innerHTML = leaderboard.map(entry => `<li>${entry.name}: ${entry.score}</li>`).join('');
 }
 
 document.querySelectorAll('.duck').forEach(duck => duck.addEventListener('click', bonk));
 document.getElementById('startButton').addEventListener('click', startGame);
 
-fetchLeaderboard();
+displayLeaderboard();
