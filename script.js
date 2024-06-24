@@ -89,6 +89,8 @@ async function saveScore() {
         score: score
     };
     await pb.collection('scores').create(record);
+    fetchLeaderboard();
+
 }
 
 async function fetchLeaderboard() {
