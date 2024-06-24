@@ -1,3 +1,8 @@
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://172.232.128.243:80');
+
+
 let score = 0;
 let lastHole;
 let timeUp = false;
@@ -78,13 +83,15 @@ function showImpact(e) {
     setTimeout(() => impact.remove(), 300);
 }
 
-function saveScore() {
+async function saveScore() {
     const name = prompt('Enter your name:');
-    leaderboard.push({ name, score });
-    leaderboard.sort((a, b) => b.score - a.score);
-    leaderboard = leaderboard.slice(0, 10); // Limit to top 10
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    displayLeaderboard();
+    if (!name) return;
+    const record = {
+        name: name,
+        score: score
+    };
+    await pb.collection('scores').create(record);
+    fetchLeaderboard();
 }
 
 function displayLeaderboard() {
