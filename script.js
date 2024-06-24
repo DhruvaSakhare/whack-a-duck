@@ -89,7 +89,19 @@ async function saveScore() {
         score: score
     };
     await pb.collection('scores').create(record);
-    fetchLeaderboard();
+}
+
+async function fetchLeaderboard() {
+    try {
+        const result = await pb.collection('scores').getFullList({
+            sort: '-score',
+            limit: 10
+        });
+        leaderboard = result.map(record => ({ name: record.name, score: record.score }));
+        displayLeaderboard();
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+    }
 }
 
 function displayLeaderboard() {
