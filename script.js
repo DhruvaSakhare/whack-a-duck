@@ -1,4 +1,4 @@
-const pb = new PocketBase('http://172.232.128.243:80');
+const pb = new PocketBase('https://172.232.128.243:443');
 
 
 let score = 0;
