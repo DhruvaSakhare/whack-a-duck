@@ -1,4 +1,4 @@
-const pb = new PocketBase('https://172.232.128.243:443');
+const pb = new PocketBase('https://beersmart.life');
 
 
 let score = 0;
