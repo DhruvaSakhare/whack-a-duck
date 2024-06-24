@@ -114,4 +114,6 @@ function displayLeaderboard() {
 document.querySelectorAll('.duck').forEach(duck => duck.addEventListener('click', bonk));
 document.getElementById('startButton').addEventListener('click', startGame);
 
+fetchLeaderboard();
+
 displayLeaderboard();
