@@ -8,12 +8,6 @@ let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 let minTime = 200;
 let maxTime = 1000;
 
-
-
-
-
-
-
 function setDifficulty() {
     const difficulty = document.getElementById('difficulty').value;
     switch(difficulty) {
