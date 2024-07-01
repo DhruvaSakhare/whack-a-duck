@@ -5,7 +5,12 @@ function handleRegistrationFormSubmit(event) {
     const username = document.getElementById('registerUsername').value;
     const password = document.getElementById('registerPassword').value;
 
-    pb.collection('users').create({ username, password })
+    const data = {
+        "username": username,
+        "password": password,
+    };
+
+    pb.collection('users').create(data)
     .then(newUser => {
         alert('Registration successful!');
         window.location.href = 'login.html'; // Redirect to login page after successful registration
