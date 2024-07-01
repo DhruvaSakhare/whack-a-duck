@@ -8,48 +8,10 @@ let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 let minTime = 200;
 let maxTime = 1000;
 
-// Function to handle form submission and registration logic
-function handleRegistrationFormSubmit(event) {
-    event.preventDefault();
-    const username = document.getElementById('registerUsername').value;
-    const password = document.getElementById('registerPassword').value;
-
-    pb.collection('users').create({ username, password })
-    .then(newUser => {
-        alert('Registration successful!');
-        window.location.href = 'login.html'; // Redirect to login page after successful registration
-    })
-    .catch(error => {
-        console.error('Registration failed:', error);
-        document.getElementById('registrationMessage').textContent = 'Registration failed. Please try again.';
-    });
-}
 
 
-// Event listener for form submission
-document.getElementById('registrationForm').addEventListener('submit', handleRegistrationFormSubmit);
 
 
-// Function to handle form submission and login logic
-function handleLoginFormSubmit(event) {
-    event.preventDefault();
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    pb.collection('users').authWithPassword(username, password)
-    .then(authData => {
-        // Login successful, redirect to game page or perform necessary actions
-        alert('Login successful!');
-        window.location.href = 'game.html'; // Redirect to game page after successful login
-    })
-    .catch(error => {
-        console.error('Login failed:', error);
-        document.getElementById('loginMessage').textContent = 'Login failed. Please check your username and password.';
-    });
-}
-
-// Event listener for form submission
-document.getElementById('loginForm').addEventListener('submit', handleLoginFormSubmit);
 
 
 function setDifficulty() {
