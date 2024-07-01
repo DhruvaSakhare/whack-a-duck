@@ -40,7 +40,7 @@ function handleLoginFormSubmit(event) {
     .then(authData => {
         // Login successful, redirect to game page or perform necessary actions
         alert('Login successful!');
-        window.location.href = 'index.html'; // Redirect to game page after successful login
+        window.location.href = 'game.html'; // Redirect to game page after successful login
     })
     .catch(error => {
         console.error('Login failed:', error);
